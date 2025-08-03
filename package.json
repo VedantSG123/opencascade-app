@@ -10,9 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-three/fiber": "^9.3.0",
+    "@types/three": "^0.178.1",
     "opencascade.js": "^2.0.0-beta.b5ff984",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "replicad": "^0.19.1",
+    "replicad-threejs-helper": "^0.19.0",
+    "three": "^0.179.1",
     "vite-plugin-top-level-await": "^1.5.0",
     "vite-plugin-wasm": "^3.5.0"
   },
