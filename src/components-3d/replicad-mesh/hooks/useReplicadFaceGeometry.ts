@@ -23,4 +23,6 @@ export const useReplicadFaceGeometry = (
       invalidate();
     };
   }, [invalidate]);
+
+  return faceGeometry.current;
 };
