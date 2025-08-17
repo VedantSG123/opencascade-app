@@ -1,3 +1,4 @@
+import type { ThreeElements } from '@react-three/fiber';
 import type * as React from 'react';
 import type { ReplicadMeshedEdges } from 'replicad-threejs-helper';
 import * as THREE from 'three';
@@ -13,6 +14,7 @@ export const ReplicadFacesMesh: React.FC<ReplicadEdgesMeshProps> = ({
   defaultHighlights,
   highlights = [],
   opacity,
+  ...rest
 }) => {
   const geometry = useReplicadEdgeGeometry(edges, defaultHighlights || []);
   useApplyHighlights(
@@ -26,7 +28,7 @@ export const ReplicadFacesMesh: React.FC<ReplicadEdgesMeshProps> = ({
   const transparent = opacity !== undefined && opacity < 1;
 
   return (
-    <lineSegments>
+    <lineSegments {...rest}>
       <primitive attach='geometry' object={geometry} />
       <lineBasicMaterial
         attach={'material-0'}
@@ -50,7 +52,7 @@ export const ReplicadFacesMesh: React.FC<ReplicadEdgesMeshProps> = ({
   );
 };
 
-type ReplicadEdgesMeshProps = {
+type ReplicadEdgesMeshProps = ThreeElements['lineSegments'] & {
   edges: ReplicadMeshedEdges;
   defaultHighlights?: number[];
   highlights?: number[] | number;

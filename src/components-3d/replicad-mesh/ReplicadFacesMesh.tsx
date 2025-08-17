@@ -1,4 +1,5 @@
 import { useTexture } from '@react-three/drei';
+import type { ThreeElements } from '@react-three/fiber';
 import type * as React from 'react';
 import type { ReplicadMeshedFaces } from 'replicad-threejs-helper';
 import * as THREE from 'three';
@@ -14,6 +15,7 @@ export const ReplicadFacesMesh: React.FC<ReplicadFacesMeshProps> = ({
   defaultHighlights,
   highlights = [],
   opacity,
+  ...rest
 }) => {
   const geometry = useReplicadFaceGeometry(faces, defaultHighlights || []);
   useApplyHighlights(
@@ -29,7 +31,7 @@ export const ReplicadFacesMesh: React.FC<ReplicadFacesMeshProps> = ({
   const transparent = opacity !== undefined && opacity < 1;
 
   return (
-    <mesh>
+    <mesh {...rest}>
       <primitive attach='geometry' object={geometry} />
       <meshMatcapMaterial
         attach={'material-0'}
@@ -55,7 +57,7 @@ export const ReplicadFacesMesh: React.FC<ReplicadFacesMeshProps> = ({
   );
 };
 
-type ReplicadFacesMeshProps = {
+type ReplicadFacesMeshProps = ThreeElements['mesh'] & {
   faces: ReplicadMeshedFaces;
   defaultHighlights?: number[];
   highlights?: number[] | number;
