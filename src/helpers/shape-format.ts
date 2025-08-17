@@ -23,14 +23,13 @@ import type { LabelConfig, MeshRenderOutput, SvgRenderOutput } from '@/types';
 
 import { normalizeColor } from './normalize-color';
 
-function normalizeColorAndOpacity(shape: InputShape): InputShape {
-  const { color, opacity, ...rest } = shape;
+function normalizeColorAndOpacity(inputShape: InputShape): InputShape {
+  const { color, opacity, ...rest } = inputShape;
 
   if (color && !opacity) {
     const { color: normalizedColor, alpha } = normalizeColor(color);
     return {
       ...rest,
-      shape,
       color: normalizedColor,
       opacity: alpha,
     };
@@ -40,13 +39,12 @@ function normalizeColorAndOpacity(shape: InputShape): InputShape {
     const { color: normalizedColor } = normalizeColor(color);
     return {
       ...rest,
-      shape,
       color: normalizedColor,
       opacity,
     };
   }
 
-  return shape;
+  return inputShape;
 }
 
 function normalizeLabels(shape: InputShape): InputShape {
@@ -221,7 +219,10 @@ function getRenderMeshOutput(
   return shapeInfo;
 }
 
-export function getRenderOutput(shapes: unknown) {
+export function getRenderOutput(
+  shapes: unknown,
+  onBeforeRender?: (cleanedShapes: CleanedShape[]) => void,
+) {
   const inputShapes = createBaseInputShapesArray(shapes);
 
   const normalizedInputShapes = inputShapes
@@ -244,7 +245,15 @@ export function getRenderOutput(shapes: unknown) {
     >,
   );
 
-  return standardShapes
+  const filteredShapes = standardShapes.filter(
+    (shape) => isMeshShape(shape.shape) || isSvgShape(shape.shape),
+  );
+
+  if (onBeforeRender) {
+    onBeforeRender(filteredShapes);
+  }
+
+  return filteredShapes
     .map((shape) => {
       if (isSvgShape(shape.shape)) {
         return getRenderSVGOutput({
@@ -263,7 +272,7 @@ export function getRenderOutput(shapes: unknown) {
           color: shape.color,
           opacity: shape.opacity,
           labels: shape.labels,
-          highlights: shape.highlight,
+          highlights: shape.highlights,
         });
       }
 
@@ -282,7 +291,7 @@ function getStandardShapes(
     .map((shape) => ({
       name: shape.name,
       shape: shape.shape as AnyShape | AnyDrawing,
-      highlight: shape.normalizedHighlights,
+      highlights: shape.normalizedHighlights,
       labels: shape.labels || [],
       color: shape.color,
       opacity: shape.opacity,
@@ -305,7 +314,7 @@ function isSvgShape(shape: unknown): shape is AnyDrawing {
   );
 }
 
-function isMeshShape(shape: unknown): shape is AnyShape {
+export function isMeshShape(shape: unknown): shape is AnyShape {
   return (
     (shape instanceof Vertex ||
       shape instanceof Edge ||
@@ -355,10 +364,10 @@ type InputShape = {
   highlightEdge?: (finder: EdgeFinder) => EdgeFinder;
 };
 
-type CleanedShape = {
+export type CleanedShape = {
   name: string;
   shape: AnyShape | AnyDrawing;
-  highlight: NormalizedHighlight[];
+  highlights: NormalizedHighlight[];
   labels: LabelConfig[];
   color?: string;
   opacity?: number;
@@ -407,7 +416,7 @@ type MeshEdgesFunction = (params?: {
 }) => LineMesh;
 
 // Interface to properly type shapes with mesh capabilities
-interface MeshableShape {
+export interface MeshableShape {
   mesh(params?: { tolerance?: number; angularTolerance?: number }): ShapeMesh;
   meshEdges(params?: {
     tolerance?: number;

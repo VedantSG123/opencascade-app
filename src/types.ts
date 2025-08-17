@@ -38,3 +38,10 @@ export type LabelConfig = {
   fontSize?: number;
   position?: 'auto' | 'side' | 'top' | 'bottom';
 };
+
+export type ExportFileTypes = 'step' | 'step-assembly' | 'stl' | 'stl-binary';
+
+export type ExportConfiguration = {
+  tolerance?: number;
+  angularTolerance?: number;
+};
