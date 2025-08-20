@@ -6,6 +6,16 @@ export function useSelection(selecedMode: string, validSelectedMode: string[]) {
   if (!validSelectedMode.includes(selecedMode)) {
     return [selection, () => null];
   }
+
+  const select = (shapeId: string) => {
+    const handleSelect = (index: number) => {
+      setSelection({ shapeId, index });
+    };
+
+    return handleSelect;
+  };
+
+  return [selection, select];
 }
 type SelectionType = {
   shapeId: string;

@@ -9,7 +9,7 @@ import meshColors from './meshColors';
 
 const placeholderFaces = new THREE.BufferGeometry();
 
-export const ReplicadFacesMesh: React.FC<ReplicadEdgesMeshProps> = ({
+export const ReplicadEdgesMesh: React.FC<ReplicadEdgesMeshProps> = ({
   edges,
   defaultHighlights,
   highlights = [],
@@ -55,6 +55,6 @@ export const ReplicadFacesMesh: React.FC<ReplicadEdgesMeshProps> = ({
 type ReplicadEdgesMeshProps = ThreeElements['lineSegments'] & {
   edges: ReplicadMeshedEdges;
   defaultHighlights?: number[];
-  highlights?: number[] | number;
+  highlights?: number[];
   opacity?: number;
 };

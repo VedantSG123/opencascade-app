@@ -57,9 +57,11 @@ export const ReplicadFacesMesh: React.FC<ReplicadFacesMeshProps> = ({
   );
 };
 
+useTexture.preload('matcap-main.jpg');
+
 type ReplicadFacesMeshProps = ThreeElements['mesh'] & {
   faces: ReplicadMeshedFaces;
   defaultHighlights?: number[];
-  highlights?: number[] | number;
+  highlights?: number[];
   opacity?: number;
 };
