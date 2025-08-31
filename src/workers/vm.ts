@@ -1,24 +1,24 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildFunctionWithContext(code: string, content: Record<string, any>) {
-  return `
-  return function(context){
-    "use strict"
-    ${Object.keys(content)
-      .map((key) => `let ${key} = context['${key}'];`)
-      .join('')}
-    ${code}
-  }
-  `;
-}
+/* eslint-disable @typescript-eslint/no-implied-eval */
 
-export function runFunctionWithContext(
-  code: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  context: Record<string, any>,
-) {
-  // eslint-disable-next-line @typescript-eslint/no-implied-eval
-  const fn = Function(buildFunctionWithContext(code, context));
+export function runFunctionWithContext<
+  T extends Record<string, unknown>,
+  R = unknown,
+>(code: string, context: T): R {
+  const keys = Object.keys(context);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+  // Build code that declares each variable from context
+  const decls = keys.map((k) => `let ${k} = context['${k}'];`).join('\n');
+
+  // Create the function, cast it to the right type so TS is happy
+  const fn = (
+    Function(`
+    return function(context) {
+      "use strict";
+      ${decls}
+      ${code}
+    }
+  `) as () => (ctx: T) => R
+  )();
+
   return fn(context);
 }

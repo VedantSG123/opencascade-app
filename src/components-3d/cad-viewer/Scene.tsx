@@ -1,8 +1,8 @@
-import { Grid } from '@react-three/drei';
 import * as React from 'react';
 
 import Controls from '../helpers/Controls';
 import Stage from '../helpers/Stage';
+import { InfiniteGrid } from './InfiniteGrid';
 
 export const Scene: React.FC<SceneProps> = ({
   children,
@@ -14,7 +14,7 @@ export const Scene: React.FC<SceneProps> = ({
     <>
       <Controls hideGizmo={hideGizmo} enableDamping={enableDamping} />
       <Stage center={center}>{children}</Stage>
-      <Grid />
+      <InfiniteGrid />
     </>
   );
 };

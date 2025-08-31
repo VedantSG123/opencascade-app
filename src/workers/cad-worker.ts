@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { expose } from 'comlink';
 import type { OpenCascadeInstance } from 'opencascade.js';
 import * as replicad from 'replicad';
@@ -96,7 +95,7 @@ async function buildFromCode(code: string) {
   let shapes;
 
   try {
-    shapes = runFunctionCode(code) as unknown;
+    shapes = runFunctionCode(code);
   } catch (e) {
     return formatException(OC, e);
   }

@@ -105,7 +105,6 @@ function normalizeHighlights(shape: InputShape): InputShape & {
 
   return {
     ...rest,
-    shape,
     normalizedHighlights,
   };
 }

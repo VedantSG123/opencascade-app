@@ -1,10 +1,10 @@
-import { Canvas } from '@react-three/fiber';
 import type * as React from 'react';
 
 import { SVGViewer } from '@/components/custom/svg-viewer';
 import type { MeshRenderOutput, SvgRenderOutput } from '@/types';
 
 import { ReplicadCombinedMesh } from '../replicad-mesh/ReplicadCombinedMesh';
+import { Canvas } from './Canvas';
 import { ErrorMesh } from './ErrorMesh';
 import type { SelectionType } from './hooks/useSelection';
 import { useSelection } from './hooks/useSelection';

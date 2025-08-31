@@ -1,31 +1,25 @@
 import type { ThreeElements } from '@react-three/fiber';
 import type * as React from 'react';
 import type { ReplicadMeshedEdges } from 'replicad-threejs-helper';
-import * as THREE from 'three';
 
 import { useApplyHighlights } from './hooks/useApplyHighlights';
 import { useReplicadEdgeGeometry } from './hooks/useReplicadEdgeGeometry';
-import meshColors from './meshColors';
-
-const placeholderFaces = new THREE.BufferGeometry();
+import getMeshColors from './meshColors';
 
 export const ReplicadEdgesMesh: React.FC<ReplicadEdgesMeshProps> = ({
   edges,
   defaultHighlights,
   highlights = [],
   opacity,
+  color,
   ...rest
 }) => {
   const geometry = useReplicadEdgeGeometry(edges, defaultHighlights || []);
-  useApplyHighlights(
-    {
-      faces: placeholderFaces,
-      lines: geometry,
-    },
-    highlights,
-  );
+  useApplyHighlights(geometry, highlights);
 
   const transparent = opacity !== undefined && opacity < 1;
+
+  const meshColors = getMeshColors(color);
 
   return (
     <lineSegments {...rest}>
@@ -57,4 +51,5 @@ type ReplicadEdgesMeshProps = ThreeElements['lineSegments'] & {
   defaultHighlights?: number[];
   highlights?: number[];
   opacity?: number;
+  color?: string;
 };

@@ -25,12 +25,14 @@ export function ReplicadCombinedMesh({
         highlights={facesHighlight}
         defaultHighlights={shape.highlights}
         onClick={handleFaceClick}
+        color={shape.color}
       />
       <ReplicadEdgesMesh
         edges={shape.edges}
         highlights={edgesHighlight}
         defaultHighlights={shape.highlights}
         onClick={handleEdgeClick}
+        color={shape.color}
       />
     </>
   );

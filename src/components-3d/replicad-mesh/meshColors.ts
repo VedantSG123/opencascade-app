@@ -1,8 +1,12 @@
-const meshColors = {
-  base: '#B0B0B0',
-  line: '#7A7A7A',
-  selected: '#DCDCDC',
-  lineSelected: '#F0F0F0',
+import { darken, lighten } from 'polished';
+
+const getMeshColorVariants = (baseColor: string = '#7E99A3') => {
+  return {
+    base: baseColor,
+    line: darken(0.2, baseColor),
+    selected: lighten(0.15, baseColor),
+    lineSelected: lighten(0.25, baseColor),
+  };
 };
 
-export default meshColors;
+export default getMeshColorVariants;

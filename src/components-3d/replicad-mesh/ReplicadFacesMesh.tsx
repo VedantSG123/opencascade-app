@@ -2,33 +2,27 @@ import { useTexture } from '@react-three/drei';
 import type { ThreeElements } from '@react-three/fiber';
 import type * as React from 'react';
 import type { ReplicadMeshedFaces } from 'replicad-threejs-helper';
-import * as THREE from 'three';
 
 import { useApplyHighlights } from './hooks/useApplyHighlights';
 import { useReplicadFaceGeometry } from './hooks/useReplicadFaceGeometry';
-import meshColors from './meshColors';
-
-const placeholderLines = new THREE.BufferGeometry();
+import getMeshColors from './meshColors';
 
 export const ReplicadFacesMesh: React.FC<ReplicadFacesMeshProps> = ({
   faces,
   defaultHighlights,
   highlights = [],
   opacity,
+  color,
   ...rest
 }) => {
   const geometry = useReplicadFaceGeometry(faces, defaultHighlights || []);
-  useApplyHighlights(
-    {
-      faces: geometry,
-      lines: placeholderLines,
-    },
-    highlights,
-  );
+  useApplyHighlights(geometry, highlights);
 
-  const matcapTexture = useTexture('matcap-main.jpg');
+  const matcapTexture = useTexture('matcap-main.png');
 
   const transparent = opacity !== undefined && opacity < 1;
+
+  const meshColors = getMeshColors(color);
 
   return (
     <mesh {...rest}>
@@ -57,11 +51,12 @@ export const ReplicadFacesMesh: React.FC<ReplicadFacesMeshProps> = ({
   );
 };
 
-useTexture.preload('matcap-main.jpg');
+useTexture.preload('matcap-main.png');
 
 type ReplicadFacesMeshProps = ThreeElements['mesh'] & {
   faces: ReplicadMeshedFaces;
   defaultHighlights?: number[];
   highlights?: number[];
   opacity?: number;
+  color?: string;
 };
