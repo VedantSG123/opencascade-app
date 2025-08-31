@@ -10,10 +10,26 @@ function App() {
   const shapes = useBuilderStore((state) => state.shapes);
   const hasError = !!useBuilderStore((state) => state.error);
   const build = useBuilderStore((state) => state.build);
+  const initWorker = useBuilderStore((state) => state.initWorker);
+  const workerReady = useBuilderStore((state) => state.workerReady);
 
   React.useEffect(() => {
-    build();
-  }, [build]);
+    initWorker();
+  }, [initWorker]);
+
+  React.useEffect(() => {
+    if (workerReady) {
+      build();
+    }
+  }, [build, workerReady]);
+
+  if (!workerReady) {
+    return (
+      <div className='w-full h-full fixed top-0 left-0 -z-10 bg-black flex items-center justify-center text-white'>
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className='w-full h-full fixed top-0 left-0 -z-10 bg-black'>

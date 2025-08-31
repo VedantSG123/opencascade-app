@@ -1,6 +1,6 @@
 import { expose } from 'comlink';
-import type { OpenCascadeInstance } from 'opencascade.js';
 import * as replicad from 'replicad';
+import type { OpenCascadeInstance } from 'replicad-opencascadejs';
 
 import { initOCC } from '@/helpers/init-occ';
 import type { CleanedShape } from '@/helpers/shape-format';
@@ -200,6 +200,7 @@ function getEdgeInfo(
 }
 
 const service = {
+  init,
   buildFromCode,
   exportToFile,
   getFaceInfo,

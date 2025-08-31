@@ -11,6 +11,7 @@ import CadWorker from '@/workers/cad-worker?worker';
 
 // Define the worker service interface based on the exposed service
 interface CadWorkerService {
+  init(): Promise<boolean>;
   buildFromCode(code: string): Promise<
     | {
         error: true;
@@ -52,6 +53,13 @@ class BuilderApi {
   constructor() {
     this.worker = new CadWorker();
     this.workerApi = wrap<CadWorkerService>(this.worker);
+  }
+
+  /**
+   * Initialize the worker
+   */
+  async init() {
+    return await this.workerApi.init();
   }
 
   /**

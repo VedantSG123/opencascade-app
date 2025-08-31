@@ -8,11 +8,13 @@ type BuilderState = {
   code: string;
   shapes: (MeshRenderOutput | SvgRenderOutput)[] | null;
   error: Error | null;
+  workerReady: boolean;
 };
 
 type BuilderActions = {
   setCode: (code: string) => void;
   build: () => Promise<void>;
+  initWorker: () => Promise<void>;
 };
 
 const DEFAULT_SCRIPT = `
@@ -48,6 +50,17 @@ const main = () => {
 
 export const useBuilderStore = create<BuilderState & BuilderActions>(
   (set, get) => {
+    const builderApi = getBuilderApi();
+
+    const initWorker = async () => {
+      try {
+        const workerReady = await builderApi.init();
+        set({ workerReady });
+      } catch (e) {
+        console.error('Error initializing worker:', e);
+      }
+    };
+
     const build = async () => {
       const { code } = get();
       if (!code) {
@@ -56,7 +69,6 @@ export const useBuilderStore = create<BuilderState & BuilderActions>(
       }
 
       try {
-        const builderApi = getBuilderApi();
         const result = await builderApi.buildFromCode(code);
 
         console.log('Build result:', result);
@@ -83,12 +95,14 @@ export const useBuilderStore = create<BuilderState & BuilderActions>(
 
     return {
       code: DEFAULT_SCRIPT.trim(),
+      workerReady: false,
       shapes: null,
       error: null,
       setCode: (code: string) => {
         set({ code });
       },
       build: runBuild,
+      initWorker,
     };
   },
 );
